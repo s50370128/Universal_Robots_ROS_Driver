@@ -1,49 +1,9 @@
 [![Build badge](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/workflows/Industrial%20CI%20pipeline/badge.svg?branch=master&event=push)](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/actions)
 
 # Universal_Robots_ROS_Driver
-Universal Robots have become a dominant supplier of lightweight, robotic manipulators for industry, as well as for scientific research and education. The Robot Operating System (ROS) has developed from a community-centered movement to a mature framework and quasi standard, providing a rich set of powerful tools for robot engineers and researchers, working in many different domains.
-
-<center><img src="ur_robot_driver/doc/initial_setup_images/e-Series.jpg" alt="Universal Robot e-Series family" style="width: 80%;"/></center>
-
-With the release of UR’s new e-Series, the demand for a ROS driver that supports the new manipulators and the newest ROS releases and paradigms like ROS-control has increased further. The goal of this driver is to provide a stable and sustainable interface between UR robots and ROS that strongly benefit all parties.
-
-It is the core value of Universal Robots, to empower people to achieve any goal within automation. The success criteria of this driver release is to follow this vision, by providing the ROS community with an easy to use, stable and powerful driver, that empowers the community to reach their goals in research and automation without struggling with unimportant technical challenges, instability or lacking features.
 
 ## Acknowledgment
-This driver is forked from the [ur_modern_driver](https://github.com/ros-industrial/ur_modern_driver).
-
-Developed in collaboration between:
-
-[<img height="60" alt="Universal Robots A/S" src="ur_robot_driver/doc/resources/ur_logo.jpg">](https://www.universal-robots.com/) &nbsp; and &nbsp;
-[<img height="60" alt="FZI Research Center for Information Technology" src="ur_robot_driver/doc/resources/fzi-logo_transparenz.png">](https://www.fzi.de).
-
-<!-- 
-    ROSIN acknowledgement from the ROSIN press kit
-    @ https://github.com/rosin-project/press_kit
--->
-
-<a href="http://rosin-project.eu">
-  <img src="http://rosin-project.eu/wp-content/uploads/rosin_ack_logo_wide.png" 
-       alt="rosin_logo" height="60" >
-</a>
-
-Supported by ROSIN - ROS-Industrial Quality-Assured Robot Software Components.  
-More information: <a href="http://rosin-project.eu">rosin-project.eu</a>
-
-<img src="http://rosin-project.eu/wp-content/uploads/rosin_eu_flag.jpg" 
-     alt="eu_flag" height="45" align="left" >  
-
-This project has received funding from the European Union’s Horizon 2020  
-research and innovation programme under grant agreement no. 732287. 
-
-
-## How to report an issue
-Before creating an issue, please have a look at the [Troubleshooting section](#Troubleshooting) of this document.
-
-To create an issue on the [Issue Board](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/issues/new) please use the default template.
-
-## How to get help
-If you need help using this driver, please see the ROS-category in the [UR+ Developer Forum](https://forum.universal-robots.com/c/ros). 
+This driver is forked from the [Universal_Robots_ROS_Driver](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver).
 
 ## Features
  * Works for all **CB3 (with software version >= 3.7) and e-Series (software >= 5.1)** robots and uses the RTDE interface for communication, whenever possible.
@@ -97,15 +57,6 @@ melodic**, however using Ubuntu 20.04 with ROS noetic should also work.
 To make sure that robot control isn't affected by system latencies, it is highly recommended to use
 a real-time kernel with the system. See the [real-time setup guide](ur_robot_driver/doc/real_time.md)
 on information how to set this up.
-
-## Preliminary UR16e support
-This driver supports all UR variants including the UR16e. However, upstream support for the UR16e is
-not finished, yet. When using the UR16e there is currently no support for gazebo or MoveIt!.
-
-See [#97](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/pull/97) for details on
-using the latest upstream develop branch of
-[ros_industrial/universal_robot](https://github.com/ros-industrial/universal_robot) which includes
-gazebo support for the ur16e, but no working MoveIt! support at the time of writing.
 
 ## Building
 
