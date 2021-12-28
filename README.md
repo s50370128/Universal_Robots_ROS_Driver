@@ -5,41 +5,6 @@
 ## Acknowledgment
 This driver is forked from the [Universal_Robots_ROS_Driver](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver).
 
-## Features
- * Works for all **CB3 (with software version >= 3.7) and e-Series (software >= 5.1)** robots and uses the RTDE interface for communication, whenever possible.
- * **Factory calibration** of the robot inside ROS to reach Cartesian
-   targets precisely.
- * **Realtime-enabled** communication structure to robustly cope with the 2ms cycle time of the
-   e-Series. To use this, compile and run it on a kernel with the `PREEMPT_RT` patch enabled. (See
-   the [Real-time setup guide](ur_robot_driver/doc/real_time.md) on how to achieve this)
- * Transparent **integration of the teach-pendant**. Using the URCaps system, a program is running
-   on the robot that handles control commands sent from ROS side. With this, the robot can be
-   **paused**, **stopped** and **resumed** without restarting the ROS driver.
-   This will in the future also enable the usage of ROS-components as part of a more complex UR-program
-   on the teach pendant. ROS-control of the robot can be quit using a service call to continue
-   program execution on the TP.
- * Use the robot's **speed-scaling**. When speed scaling is active due to safety constraints or the
-   speed slider is used, this gets correctly handled on the ROS side, as well slowing down
-   trajectory execution accordingly.<br/>
-   **Note**: Other ros-controllers based on a position interface
-   can be used with this driver, but may behave wrong if the speed slider isn't set to 100% or if
-   speed scaling slows down the robot. Also, the pausing function can only be used if the default
-   scaled trajectory controller is used.
- * **ROS-Service-based replacement of most every-day TP-interactions** offer using UR robots without
-   interacting with the teach pendant at all, if desired. The robot can be started, stopped and even
-   recovery from safety events can be done using ROS service- and action calls. See the driver's
-   [dashboard services](ur_robot_driver/doc/ROS_INTERFACE.md#ur_robot_driver_node) and the
-   [robot_state_helper node](ur_robot_driver/doc/ROS_INTERFACE.md#robot_state_helper) for details.
- * Use **on-the-robot interpolation** for both Cartesian and
-   joint-based trajectories. This is extremely helpful if your application can
-   not meet the real-time requirements of the driver. Special types of
-   [passthrough
-   controllers](https://github.com/fzi-forschungszentrum-informatik/cartesian_ros_control/tree/beta-testing/pass_through_controllers)
-   forward the trajectories directly to the robot, which then takes
-   care of interpolation between the waypoints to achieve best performance.
-
-Please see the external [feature list](ur_robot_driver/doc/features.md) for a listing of all features supported by this driver.
-
 ## Contents
 This repository contains the new **ur_robot_driver** and a couple of helper packages, such as:
 
@@ -49,6 +14,8 @@ This repository contains the new **ur_robot_driver** and a couple of helper pack
   * **ur_calibration**: Package around extracting and converting a robot's factory calibration
     information to make it usable by the robot_description.
   * **ur_robot_driver**: The actual driver package.
+
+Please see the external [feature list](ur_robot_driver/doc/features.md) for a listing of all features supported by this driver.
 
 ## Requirements
 This driver requires a system setup with ROS. It is recommended to use **Ubuntu 18.04 with ROS
@@ -117,21 +84,20 @@ $ source devel_isolated/setup.bash
 ## Setting up a UR robot for ur_robot_driver
 ### Prepare the robot
 For using the *ur_robot_driver* with a real robot you need to install the
-**externalcontrol-1.0.4.urcap** which can be found inside the **resources** folder of this driver.
+**externalcontrol-1.0.5.urcap** which can be found inside the **resources** folder of this driver.
 
 **Note**: For installing this URCap a minimal PolyScope version of 3.7 or 5.1 (in case of e-Series) is
 necessary.
 
 For installing the necessary URCap and creating a program, please see the individual tutorials on
-how to [setup a CB3 robot](ur_robot_driver/doc/install_urcap_cb3.md) or how to [setup an e-Series
-robot](ur_robot_driver/doc/install_urcap_e_series.md).
+how to [setup an e-Series robot](ur_robot_driver/doc/install_urcap_e_series.md).
 
-To setup the tool communication on an e-Series robot, please consider the [tool communication setup
-guide](ur_robot_driver/doc/setup_tool_communication.md).
+To setup the tool communication on an e-Series robot, please consider the
+[tool communication setup guide](ur_robot_driver/doc/setup_tool_communication.md).
 
 ### Prepare the ROS PC
-For using the driver make sure it is installed (either by the debian package or built from source
-inside a catkin workspace).
+For a more elaborate tutorial on how to get started, please see the
+[usage example](ur_robot_driver/doc/usage_example.md).
 
 #### Extract calibration information
 Each UR robot is calibrated inside the factory giving exact forward and inverse kinematics. To also
@@ -139,7 +105,6 @@ make use of this in ROS, you first have to extract the calibration information f
 
 Though this step is not necessary to control the robot using this driver, it is highly recommended
 to do so, as otherwise endeffector positions might be off in the magnitude of centimeters.
-
 
 For this, there exists a helper script:
 
@@ -153,11 +118,6 @@ We recommend keeping calibrations for all robots in your organization in a commo
 [package's documentation](ur_calibration/README.md) for details.
 
 #### Quick start
-Once the driver is built and the **externalcontrol** URCap is installed on the
-robot, you are good to go ahead starting the driver. (**Note**: We do
-recommend, though, to [extract your robot's
-calibration](#extract-calibration-information) first.)
-
 To actually start the robot driver use one of the existing launch files
 
     $ roslaunch ur_robot_driver <robot_type>_bringup.launch robot_ip:=192.168.56.101
@@ -173,12 +133,10 @@ If you calibrated your robot before, pass that calibration to the launch file:
 If the parameters in that file don't match the ones reported from the robot, the driver will output
 an error during startup, but will remain usable.
 
-For more information on the launch file's parameters see its own documentation.
-
 Once the robot driver is started, load the [previously generated program](#prepare-the-robot) on the
 robot panel that will start the *External Control* program node and execute it. From that moment on
 the robot is fully functional. You can make use of the *Pause* function or even *Stop* (:stop_button:) the
-program.  Simply press the *Play* button (:arrow_forward:) again and the ROS driver will reconnect.
+program. Simply press the *Play* button (:arrow_forward:) again and the ROS driver will reconnect.
 
 Inside the ROS terminal running the driver you should see the output `Robot ready to receive control commands.`
 
@@ -200,10 +158,6 @@ You may need to install rqt_joint_trajectory_controller by running:
 ```
 sudo apt install ros-<ROS-DISTRO>-rqt-joint-trajectory-controller
 ```
-where ROS-DISTRO will be replaced with your version of ROS.
-
-For a more elaborate tutorial on how to get started, please see the
-[usage example](ur_robot_driver/doc/usage_example.md).
 
 ### Replacing the robot description
 
@@ -245,8 +199,7 @@ In general, make sure you've completed the following tasks:
 3. Load and start the previously generated program on the TP.
 
 ### When starting the program on the TP, I get an error "The connection to the remote PC could not be established"
-Make sure, the IP address setup is correct, as described in the setup guides ([CB3 robots](ur_robot_driver/doc/install_urcap_cb3.md),
-[e-Series robots](ur_robot_driver/doc/install_urcap_e_series.md))
+Make sure, the IP address setup is correct, as described in the setup guides ([e-Series robots](ur_robot_driver/doc/install_urcap_e_series.md))
 
 **Note:** This error can also show up, when the ROS driver is not running.
 
